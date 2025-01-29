@@ -2,100 +2,120 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chameleon</title>
-    <style>
-        button {
-            padding: 10px;
-            font-size: 2em;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chameleon</title>
+	<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
 
-<body>
-    <div id="word"></div>
-    <button id="btn" onclick="startGame()">Start</button>
+<body class="min-h-screen flex justify-center items-center">
+	<div id="word" class="text-2xl"></div>
+	<button onclick="startGame()" id="btn" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg">
+		Start game
+	</button>
 </body>
 <script>
-    let player = 0;
-    const words = [
-	"Match (मैच/मिलान)",
-	"Bat (चमगादड़/बैट)",
-	"Ball (गेंद/बॉल)",
-	"Ring (अंगूठी/घेरा)",
-	"Spring (वसंत/झरना)",
-	"Light (हल्का/रोशनी)",
-	"Fly (मक्खी/उड़ना)",
-	"Plant (पौधा/फैक्टरी)",
-	"Train (ट्रेन/प्रशिक्षण)",
-	"Nail (नाखून/कील)",
-	"Fire (आग/निकालना)",
-	"Tie (टाई/गांठ)",
-	"Play (खेल/नाटक)",
-	"Ground (भूमि/आधार)",
-	"Duck (बतख/झुकना)",
-	"Point (बिंदु/तर्क)",
-	"Rock (चट्टान/झूलना)",
-	"Watch (देखना/घड़ी)",
-	"Key (चाबी/महत्वपूर्ण)",
-	"Bark (छाल/भौंकना)",
-	"Well (कुआं/स्वस्थ)",
-	"Right (सही/दायां)",
-	"Address (पता/संभाषण)",
-	"Flat (फ्लैट/चपटा)",
-	"Kind (प्रकार/दयालु)",
-	"Charge (शुल्क/आक्रमण)",
-	"Table (मेज/सूची)",
-	"Crane (क्रेन/सारस)",
-	"Band (बैंड/पट्टी)",
-	"Lap (गोद/ढकना)",
-	"Trip (यात्रा/गिरना)",
-	"Cap (टोपी/सीमा)",
-	"Plant (पौधा/संयंत्र)",
-	"Park (पार्क/खड़ा करना)",
-	"Board (बोर्ड/समिति)",
-	"Second (दूसरा/समर्थन)",
-	"Case (डिब्बा/मामला)",
-	"Bark (भौंकना/छाल)",
-	"Can (डिब्बा/सकना)",
-	"Stick (छड़ी/चिपकना)",
-	"Row (पंक्ति/झगड़ा)",
-	"Cool (ठंडा/शांत)",
-	"Net (जाल/नेट)",
-	"Hand (हाथ/सहायता)",
-	"Fall (पतझड़/गिरना)",
-	"Well (कुआं/अच्छा)",
-	"Match (मैच/जोड़ी)",
-	"Fire (आग/निकालना)",
-    ]
-    const roundWord = words[Math.floor(Math.random() * (words.length + 1))]
-    const chameleon = Math.floor(Math.random() * 5) + 1
+	let player = 0;
+	const words = [
+		"Match (मैच/मिलान)",
+		"Bat (चमगादड़/बैट)",
+		"Ball (गेंद/बॉल)",
+		"Ring (अंगूठी/घेरा)",
+		"Spring (वसंत/झरना)",
+		"Light (हल्का/रोशनी)",
+		"Fly (मक्खी/उड़ना)",
+		"Plant (पौधा/फैक्टरी)",
+		"Train (ट्रेन/प्रशिक्षण)",
+		"Nail (नाखून/कील)",
+		"Fire (आग/निकालना)",
+		"Tie (टाई/गांठ)",
+		"Play (खेल/नाटक)",
+		"Ground (भूमि/आधार)",
+		"Duck (बतख/झुकना)",
+		"Point (बिंदु/तर्क)",
+		"Rock (चट्टान/झूलना)",
+		"Watch (देखना/घड़ी)",
+		"Key (चाबी/महत्वपूर्ण)",
+		"Bark (छाल/भौंकना)",
+		"Well (कुआं/स्वस्थ)",
+		"Right (सही/दायां)",
+		"Address (पता/संभाषण)",
+		"Flat (फ्लैट/चपटा)",
+		"Kind (प्रकार/दयालु)",
+		"Charge (शुल्क/आक्रमण)",
+		"Table (मेज/सूची)",
+		"Crane (क्रेन/सारस)",
+		"Band (बैंड/पट्टी)",
+		"Lap (गोद/ढकना)",
+		"Trip (यात्रा/गिरना)",
+		"Cap (टोपी/सीमा)",
+		"Plant (पौधा/संयंत्र)",
+		"Park (पार्क/खड़ा करना)",
+		"Board (बोर्ड/समिति)",
+		"Second (दूसरा/समर्थन)",
+		"Case (डिब्बा/मामला)",
+		"Bark (भौंकना/छाल)",
+		"Can (डिब्बा/सकना)",
+		"Stick (छड़ी/चिपकना)",
+		"Row (पंक्ति/झगड़ा)",
+		"Cool (ठंडा/शांत)",
+		"Net (जाल/नेट)",
+		"Hand (हाथ/सहायता)",
+		"Fall (पतझड़/गिरना)",
+		"Well (कुआं/अच्छा)",
+		"Match (मैच/जोड़ी)",
+		"Fire (आग/निकालना)",
+	]
+	const roundWord = words[Math.floor(Math.random() * (words.length + 1))]
+	const chameleon = Math.floor(Math.random() * 5) + 1
 
-    function startGame() {
-        document.getElementById("word").innerHTML = `
-            <button onclick="next()">Pass to player ${player + 1}</button>
+	function startGame() {
+		document.getElementById("word").innerHTML = `
+            <button onclick="next()" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg">
+				Pass to player ${player + 1}
+			</button>
         `;
-        document.getElementById("btn").style.display = "none";
-    }
+		document.getElementById("btn").style.display = "none";
+	}
 
-    function next() {
-        player += 1;
-        if (player > 5) {
-            document.getElementById("word").innerHTML = `<h1>Done</h1>`;
-            return
-        }
-        document.getElementById("word").innerHTML = `
-            <button onclick="show()">Show word</button>
+	function next() {
+		player += 1;
+		if (player > 5) {
+			document.getElementById("word").innerHTML = `<div class="flex flex-col justify-center items-center">
+				<div class="text-3xl text-center font-semibold">
+					Round over
+				</div>
+				<div id="reveal">
+					<button onclick="reveal()" class="mt-4 p-4 cursor-pointer font-semibold text-3xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg">
+						Reveal
+					</button>
+				</div>
+			<div>
+			`;
+			return
+		}
+		document.getElementById("word").innerHTML = `
+            <button onclick="show()" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg">
+				Show word
+			</button>
         `;
-    }
+	}
 
-    function show() {
-        document.getElementById("word").innerHTML = `
-            <h1>${player === chameleon ? "Chameleon" : roundWord}</h1>
-            <button onclick="next()">Pass to player ${player}</button>
+	function show() {
+		document.getElementById("word").innerHTML = `
+            <div class="mb-4 text-3xl text-center font-semibold">${player === chameleon ? "Chameleon" : roundWord}</div>
+            <button onclick="next()" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg">
+				Pass to player ${player}
+			</button>
         `;
-    }
+	}
+
+	function reveal() {
+		document.getElementById("reveal").innerHTML = `
+			<div class="mb-4 text-3xl text-center font-semibold">Word: ${roundWord}</div>
+			<div class="mb-4 text-3xl text-center font-semibold">Chameleon: Player ${chameleon}</div>
+		`;
+	}
 </script>
 
 </html>
