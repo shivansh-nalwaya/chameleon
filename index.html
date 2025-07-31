@@ -9,14 +9,54 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
-<body class="min-h-[100svh] flex justify-center items-center">
-	<div id="word" class="text-2xl"></div>
-	<button onclick="startGame()" id="btn" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg">
-		Start game
-	</button>
+<body class="min-h-[100svh] flex justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100">
+	<div id="gameContainer" class="text-center max-w-md mx-auto p-8">
+		<!-- Initial Setup Screen -->
+		<div id="setupScreen" class="space-y-6">
+			<h1 class="text-4xl font-bold text-gray-800 mb-8">Chameleon Game</h1>
+			<div class="space-y-4">
+				<label for="playerCount" class="block text-xl font-semibold text-gray-700">Number of Players:</label>
+				<input type="number" id="playerCount" min="3" max="10" value="4" class="w-full p-3 text-xl border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+				<button onclick="startGame()" class="w-full p-4 cursor-pointer font-semibold text-2xl text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 rounded-lg transition-colors">
+					Start Game
+				</button>
+			</div>
+		</div>
+
+		<!-- Game Screen -->
+		<div id="gameScreen" class="hidden space-y-6">
+			<div id="word" class="text-2xl"></div>
+			<div id="gameControls" class="space-y-4">
+				<button onclick="nextPlayer()" id="nextBtn" class="p-4 cursor-pointer font-semibold text-2xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 rounded-lg transition-colors">
+					Pass to Player 1
+				</button>
+			</div>
+		</div>
+
+		<!-- Round End Screen -->
+		<div id="roundEndScreen" class="hidden space-y-6">
+			<div class="text-3xl text-center font-semibold text-gray-800">
+				Round Over
+			</div>
+			<div id="reveal" class="space-y-4">
+				<button onclick="revealResults()" class="p-4 cursor-pointer font-semibold text-2xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 rounded-lg transition-colors">
+					Reveal Results
+				</button>
+			</div>
+			<button onclick="newRound()" class="p-4 cursor-pointer font-semibold text-xl text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 rounded-lg transition-colors">
+				New Round
+			</button>
+		</div>
+	</div>
 </body>
+
 <script>
-	let player = 0;
+	let currentPlayer = 0;
+	let totalPlayers = 4;
+	let chameleon = 1;
+	let roundWord = "";
+	let gameStarted = false;
+	
 	const words = [
 		"Match (मैच/मिलान)",
 		"Bat (चमगादड़/बैट)",
@@ -66,56 +106,101 @@
 		"Well (कुआं/अच्छा)",
 		"Match (मैच/जोड़ी)",
 		"Fire (आग/निकालना)",
-	]
-	const roundWord = words[_.random(words.length + 1)]
-	const chameleon = _.random(1, 5)
+	];
 
 	function startGame() {
-		document.getElementById("word").innerHTML = `
-            <button onclick="next()" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg">
-				Pass to player ${player + 1}
-			</button>
-        `;
-		document.getElementById("btn").style.display = "none";
-	}
-
-	function next() {
-		player += 1;
-		if (player > 5) {
-			document.getElementById("word").innerHTML = `<div class="flex flex-col justify-center items-center">
-				<div class="text-3xl text-center font-semibold">
-					Round over
-				</div>
-				<div id="reveal">
-					<button onclick="reveal()" class="mt-4 p-4 cursor-pointer font-semibold text-3xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg">
-						Reveal
-					</button>
-				</div>
-			<div>
-			`;
-			return
+		const playerCountInput = document.getElementById('playerCount');
+		totalPlayers = parseInt(playerCountInput.value);
+		
+		if (totalPlayers < 3 || totalPlayers > 10) {
+			alert('Please enter a number between 3 and 10 players.');
+			return;
 		}
-		document.getElementById("word").innerHTML = `
-            <button onclick="show()" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg">
-				Show word
-			</button>
-        `;
+		
+		// Initialize game
+		currentPlayer = 0;
+		chameleon = _.random(1, totalPlayers);
+		roundWord = words[_.random(words.length - 1)];
+		gameStarted = true;
+		
+		// Hide setup, show game
+		document.getElementById('setupScreen').classList.add('hidden');
+		document.getElementById('gameScreen').classList.remove('hidden');
+		
+		// Start with first player
+		nextPlayer();
 	}
 
-	function show() {
-		document.getElementById("word").innerHTML = `
-            <div class="mb-4 text-3xl text-center font-semibold">${player === chameleon ? "Chameleon" : roundWord}</div>
-            <button onclick="next()" class="p-4 cursor-pointer font-semibold text-3xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg">
-				Pass to player ${player}
-			</button>
-        `;
-	}
-
-	function reveal() {
-		document.getElementById("reveal").innerHTML = `
-			<div class="mb-4 text-3xl text-center font-semibold">Word: ${roundWord}</div>
-			<div class="mb-4 text-3xl text-center font-semibold">Chameleon: Player ${chameleon}</div>
+	function nextPlayer() {
+		currentPlayer++;
+		
+		if (currentPlayer > totalPlayers) {
+			// Round is over
+			document.getElementById('gameScreen').classList.add('hidden');
+			document.getElementById('roundEndScreen').classList.remove('hidden');
+			return;
+		}
+		
+		// Update button text
+		document.getElementById('nextBtn').innerHTML = `Pass to Player ${currentPlayer}`;
+		
+		// Show word button for current player
+		document.getElementById('word').innerHTML = `
+			<div class="mb-6">
+				<h2 class="text-2xl font-bold text-gray-800 mb-4">Player ${currentPlayer}'s Turn</h2>
+				<button onclick="showWord()" class="p-4 cursor-pointer font-semibold text-2xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 rounded-lg transition-colors">
+					Show Word
+				</button>
+			</div>
 		`;
+	}
+
+	function showWord() {
+		const isChameleon = currentPlayer === chameleon;
+		const wordToShow = isChameleon ? "CHAMELEON" : roundWord;
+		
+		document.getElementById('word').innerHTML = `
+			<div class="mb-6">
+				<h2 class="text-2xl font-bold text-gray-800 mb-4">Player ${currentPlayer}</h2>
+				<div class="text-3xl font-bold text-center p-6 bg-white rounded-lg shadow-lg border-2 ${isChameleon ? 'border-red-500' : 'border-green-500'}">
+					${wordToShow}
+				</div>
+				<p class="text-lg text-gray-600 mt-4">
+					${isChameleon ? 'You are the CHAMELEON! Try to blend in and guess the word.' : 'Describe this word without saying it directly.'}
+				</p>
+			</div>
+		`;
+		
+		// Update button to continue to next player
+		document.getElementById('nextBtn').innerHTML = `Continue to Next Player`;
+	}
+
+	function revealResults() {
+		document.getElementById('reveal').innerHTML = `
+			<div class="space-y-4 p-6 bg-white rounded-lg shadow-lg">
+				<div class="text-2xl font-bold text-gray-800">Round Results</div>
+				<div class="text-xl">
+					<span class="font-semibold">Word:</span> ${roundWord}
+				</div>
+				<div class="text-xl">
+					<span class="font-semibold">Chameleon:</span> Player ${chameleon}
+				</div>
+			</div>
+		`;
+	}
+
+	function newRound() {
+		// Reset game state
+		currentPlayer = 0;
+		chameleon = _.random(1, totalPlayers);
+		roundWord = words[_.random(words.length - 1)];
+		
+		// Show game screen
+		document.getElementById('roundEndScreen').classList.add('hidden');
+		document.getElementById('gameScreen').classList.remove('hidden');
+		
+		// Start new round
+		nextPlayer();
 	}
 </script>
 
