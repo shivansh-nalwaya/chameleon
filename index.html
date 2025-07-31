@@ -6,7 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Chameleon</title>
 	<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+		integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body class="min-h-[100svh] flex justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -16,8 +18,10 @@
 			<h1 class="text-4xl font-bold text-gray-800 mb-8">Chameleon Game</h1>
 			<div class="space-y-4">
 				<label for="playerCount" class="block text-xl font-semibold text-gray-700">Number of Players:</label>
-				<input type="number" id="playerCount" min="3" max="10" value="4" class="w-full p-3 text-xl border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
-				<button onclick="startGame()" class="w-full p-4 cursor-pointer font-semibold text-2xl text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 rounded-lg transition-colors">
+				<input type="number" id="playerCount" min="3" max="10" value="4"
+					class="w-full p-3 text-xl border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+				<button onclick="startGame()"
+					class="w-full p-4 cursor-pointer font-semibold text-2xl text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 rounded-lg transition-colors">
 					Start Game
 				</button>
 			</div>
@@ -27,7 +31,8 @@
 		<div id="gameScreen" class="hidden space-y-6">
 			<div id="word" class="text-2xl"></div>
 			<div id="gameControls" class="space-y-4">
-				<button onclick="nextPlayer()" id="nextBtn" class="p-4 cursor-pointer font-semibold text-2xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 rounded-lg transition-colors">
+				<button onclick="nextPlayer()" id="nextBtn"
+					class="p-4 cursor-pointer font-semibold text-2xl text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 rounded-lg transition-colors">
 					Pass to Player 1
 				</button>
 			</div>
@@ -39,11 +44,13 @@
 				Round Over
 			</div>
 			<div id="reveal" class="space-y-4">
-				<button onclick="revealResults()" class="p-4 cursor-pointer font-semibold text-2xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 rounded-lg transition-colors">
+				<button onclick="revealResults()"
+					class="p-4 cursor-pointer font-semibold text-2xl text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 rounded-lg transition-colors">
 					Reveal Results
 				</button>
 			</div>
-			<button onclick="newRound()" class="p-4 cursor-pointer font-semibold text-xl text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 rounded-lg transition-colors">
+			<button onclick="newRound()"
+				class="p-4 cursor-pointer font-semibold text-xl text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 rounded-lg transition-colors">
 				New Round
 			</button>
 		</div>
@@ -56,94 +63,146 @@
 	let chameleon = 1;
 	let roundWord = "";
 	let gameStarted = false;
-	
+
 	const words = [
-		"Match (मैच/मिलान)",
-		"Bat (चमगादड़/बैट)",
-		"Ball (गेंद/बॉल)",
-		"Ring (अंगूठी/घेरा)",
-		"Spring (वसंत/झरना)",
-		"Light (हल्का/रोशनी)",
-		"Fly (मक्खी/उड़ना)",
-		"Plant (पौधा/फैक्टरी)",
-		"Train (ट्रेन/प्रशिक्षण)",
-		"Nail (नाखून/कील)",
-		"Fire (आग/निकालना)",
-		"Tie (टाई/गांठ)",
-		"Play (खेल/नाटक)",
-		"Ground (भूमि/आधार)",
-		"Duck (बतख/झुकना)",
-		"Point (बिंदु/तर्क)",
-		"Rock (चट्टान/झूलना)",
-		"Watch (देखना/घड़ी)",
-		"Key (चाबी/महत्वपूर्ण)",
-		"Bark (छाल/भौंकना)",
-		"Well (कुआं/स्वस्थ)",
-		"Right (सही/दायां)",
-		"Address (पता/संभाषण)",
-		"Flat (फ्लैट/चपटा)",
-		"Kind (प्रकार/दयालु)",
-		"Charge (शुल्क/आक्रमण)",
-		"Table (मेज/सूची)",
-		"Crane (क्रेन/सारस)",
-		"Band (बैंड/पट्टी)",
-		"Lap (गोद/ढकना)",
-		"Trip (यात्रा/गिरना)",
-		"Cap (टोपी/सीमा)",
-		"Plant (पौधा/संयंत्र)",
-		"Park (पार्क/खड़ा करना)",
-		"Board (बोर्ड/समिति)",
-		"Second (दूसरा/समर्थन)",
-		"Case (डिब्बा/मामला)",
-		"Bark (भौंकना/छाल)",
-		"Can (डिब्बा/सकना)",
-		"Stick (छड़ी/चिपकना)",
-		"Row (पंक्ति/झगड़ा)",
-		"Cool (ठंडा/शांत)",
-		"Net (जाल/नेट)",
-		"Hand (हाथ/सहायता)",
-		"Fall (पतझड़/गिरना)",
-		"Well (कुआं/अच्छा)",
-		"Match (मैच/जोड़ी)",
-		"Fire (आग/निकालना)",
+		"Seal – सील (महर/समुद्री जानवर)",
+		"Pitch – पिच (मैदान/आवाज़ की तीव्रता)",
+		"Bank – बैंक (पैसे का बैंक/नदी का किनारा)",
+		"Current – करंट (विद्युत धारा/वर्तमान समय)",
+		"Date – डेट (तारीख/मिलन)",
+		"Batting – बैटिंग (क्रिकेट/पलकों की झपक)",
+		"Pen – पेन (कलम/बाड़ा)",
+		"Stump – स्टंप (क्रिकेट/कटा हुआ पेड़)",
+		"Leaves – लीव्स (पत्ते/छुट्टियाँ)",
+		"Trip – ट्रिप (यात्रा/ठोकर लगना)",
+		"Wave – वेव (लहर/हाथ हिलाना)",
+		"Break – ब्रेक (तोड़ना/अवकाश)",
+		"Fan – फैन (पंखा/प्रशंसक)",
+		"Letter – लेटर (पत्र/अक्षर)",
+		"Rock – रॉक (संगीत/पत्थर)",
+		"Bat – बैट (चमगादड़/क्रिकेट बैट)",
+		"Scale – स्केल (तराजू/आकार/पैमाना)",
+		"Jam – जैम (जामुन/भीड़/अटक जाना)",
+		"Club – क्लब (समूह/गोल्फ स्टिक)",
+		"Stamp – स्टैम्प (डाक टिकट/पैर पटकना)",
+		"Bowl – बाउल (कटोरा/गेंद डालना)",
+		"Sound – साउंड (ध्वनि/स्वस्थ)",
+		"Row – रो (पंक्ति/लड़ाई)",
+		"Drop – ड्रॉप (बूंद/गिरना)",
+		"Spring – स्प्रिंग (वसंत/छलांग लगाना)",
+		"Pool – पूल (तलाब/संयुक्त निधि)",
+		"Toast – टोस्ट (ब्रेड/सलामी देना)",
+		"Page – पेज (पन्ना/सेवक)",
+		"Brush – ब्रश (ब्रश/संघर्ष)",
+		"Nail – नेल (नाखून/कील)",
+		"Ruler – रूलर (पैमाना/शासक)",
+		"Trip – ट्रिप (सैर/ठोकर)",
+		"Drill – ड्रिल (मशीन/अभ्यास)",
+		"Stick – स्टिक (छड़ी/चिपकाना)",
+		"Saw – सॉ (आरी/देखा)",
+		"Chest – चेस्ट (सीना/संदूक)",
+		"Mine – माइन (मेरा/खनन क्षेत्र)",
+		"Well – वेल (ठीक/कुआं)",
+		"Ball – बॉल (गेंद/नृत्य समारोह)",
+		"Can – कैन (डिब्बा/सकना)",
+		"Fair – फेयर (मेला/न्यायसंगत)",
+		"Trip – ट्रिप (यात्रा/ठोकर)",
+		"Suit – सूट (कपड़े/मुकदमा)",
+		"Palm – पाम (हथेली/पाम पेड़)",
+		"Bark – बार्क (भौंकना/पेड़ की छाल)",
+		"Tender – टेंडर (कोमल/निविदा)",
+		"Will – विल (इच्छा/वसीयत)",
+		"Fine – फाइन (जुर्माना/अच्छा)",
+		"Coach – कोच (प्रशिक्षक/डिब्बा)",
+		"Point – पॉइंट (बिंदु/मत)",
+		"Order – ऑर्डर (आदेश/व्यवस्था)",
+		"Chest – चेस्ट (संदूक/सीना)",
+		"Rock – रॉक (झूलना/चट्टान)",
+		"Mean – मीन (मतलब/कंजूस)",
+		"Cool – कूल (ठंडा/शानदार)",
+		"Current – करंट (धारा/वर्तमान)",
+		"Light – लाइट (प्रकाश/हल्का)",
+		"Trip – ट्रिप (सैर/गिरना)",
+		"Crane – क्रेन (मशीन/पक्षी)",
+		"Duck – डक (बतख/झुकना)",
+		"Watch – वॉच (घड़ी/निगरानी करना)",
+		"Ring – रिंग (अंगूठी/घंटी की आवाज़)",
+		"Right – राइट (सही/दायाँ)",
+		"Left – लेफ्ट (बायाँ/छोड़ देना)",
+		"Kind – काइंड (दयालु/प्रकार)",
+		"Charge – चार्ज (आरोप/शुल्क/आक्रमण)",
+		"Present – प्रेज़ेंट (उपस्थित/उपहार)",
+		"Object – ऑब्जेक्ट (वस्तु/विरोध करना)",
+		"Close – क्लोज़ (बंद/निकट)",
+		"Content – कंटेंट (सामग्री/संतुष्ट)",
+		"Wound – वूंड (घाव/लपेटना - wind in past)",
+		"Tire – टायर (थकना/गाड़ी का टायर)",
+		"Row – रो (पंक्ति/लड़ाई)",
+		"Current – करंट (विद्युत/समय)",
+		"Bear – बेयर (भालू/सहन करना)",
+		"Fine – फाइन (जुर्माना/अच्छा)",
+		"Trip – ट्रिप (यात्रा/गिरना)",
+		"Break – ब्रेक (टूटना/अवकाश)",
+		"Change – चेंज (बदलाव/छुट्टे पैसे)",
+		"Right – राइट (सही/अधिकार)",
+		"Lie – लाई (झूठ/लेटना)",
+		"Second – सेकंड (समय/समर्थन देना)",
+		"Clip – क्लिप (क्लिप/काटना)",
+		"Net – नेट (जाल/कुल)",
+		"Tissue – टिशू (ऊतक/पेपर नैपकिन)",
+		"Trip – ट्रिप (यात्रा/ठोकर)",
+		"Post – पोस्ट (चिट्ठी/जगह/तैनाती)",
+		"Match – मैच (मैच/मिलान)",
+		"Cooler – कूलर (ठंडा यंत्र/अधिक ठंडा व्यक्ति)",
+		"Volume – वॉल्यूम (ध्वनि/पुस्तक खंड)",
+		"Base – बेस (आधार/सैन्य शिविर)",
+		"Mug – मग (कप/लूटना)",
+		"Trip – ट्रिप (सैर/अटकना)",
+		"Tack – टैक (कील/दृष्टिकोण)",
+		"Mine – माइन (मेरा/खदान)",
+		"Slip – स्लिप (फिसलना/पर्ची)",
+		"Clip – क्लिप (काटना/वीडियो अंश)",
+		"Wave – वेव (हाथ हिलाना/सागर लहर)",
+		"Rock – रॉक (पथरीला/झूलना)",
+		"Sink – सिंक (डूबना/रसोई का सिंक)",
 	];
 
 	function startGame() {
 		const playerCountInput = document.getElementById('playerCount');
 		totalPlayers = parseInt(playerCountInput.value);
-		
+
 		if (totalPlayers < 3 || totalPlayers > 10) {
 			alert('Please enter a number between 3 and 10 players.');
 			return;
 		}
-		
+
 		// Initialize game
 		currentPlayer = 0;
-		chameleon = _.random(1, totalPlayers);
+		chameleon = _.random(2, totalPlayers); // First player (player 1) is never chameleon
 		roundWord = words[_.random(words.length - 1)];
 		gameStarted = true;
-		
+
 		// Hide setup, show game
 		document.getElementById('setupScreen').classList.add('hidden');
 		document.getElementById('gameScreen').classList.remove('hidden');
-		
+
 		// Start with first player
 		nextPlayer();
 	}
 
 	function nextPlayer() {
 		currentPlayer++;
-		
+
 		if (currentPlayer > totalPlayers) {
 			// Round is over
 			document.getElementById('gameScreen').classList.add('hidden');
 			document.getElementById('roundEndScreen').classList.remove('hidden');
 			return;
 		}
-		
+
 		// Update button text
 		document.getElementById('nextBtn').innerHTML = `Pass to Player ${currentPlayer}`;
-		
+
 		// Show word button for current player
 		document.getElementById('word').innerHTML = `
 			<div class="mb-6">
@@ -158,7 +217,7 @@
 	function showWord() {
 		const isChameleon = currentPlayer === chameleon;
 		const wordToShow = isChameleon ? "CHAMELEON" : roundWord;
-		
+
 		document.getElementById('word').innerHTML = `
 			<div class="mb-6">
 				<h2 class="text-2xl font-bold text-gray-800 mb-4">Player ${currentPlayer}</h2>
@@ -170,7 +229,7 @@
 				</p>
 			</div>
 		`;
-		
+
 		// Update button to continue to next player
 		document.getElementById('nextBtn').innerHTML = `Continue to Next Player`;
 	}
@@ -192,13 +251,13 @@
 	function newRound() {
 		// Reset game state
 		currentPlayer = 0;
-		chameleon = _.random(1, totalPlayers);
+		chameleon = _.random(2, totalPlayers); // First player (player 1) is never chameleon
 		roundWord = words[_.random(words.length - 1)];
-		
+
 		// Show game screen
 		document.getElementById('roundEndScreen').classList.add('hidden');
 		document.getElementById('gameScreen').classList.remove('hidden');
-		
+
 		// Start new round
 		nextPlayer();
 	}
